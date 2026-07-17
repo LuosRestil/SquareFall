@@ -10,13 +10,10 @@ const screenManager = new ScreenManager(
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-canvas.width = screenManager.width * screenManager.dpr;
-canvas.height = screenManager.height * screenManager.dpr;
-ctx.scale(screenManager.dpr, screenManager.dpr);
-screenManager.resize(canvas);
+screenManager.resize(canvas, ctx);
 
 window.addEventListener("resize", () => {
-  screenManager.resize(canvas);
+  screenManager.resize(canvas, ctx);
 });
 
 let lastMs = 0;
@@ -90,6 +87,8 @@ function draw() {
   ctx.fillStyle = "whitesmoke";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  ctx.save();
+
   ctx.font = "128px sans-serif";
   ctx.fillStyle = "darkgrey";
   ctx.textAlign = "center";
@@ -99,4 +98,6 @@ function draw() {
   squares.forEach((square) => {
     square.draw(ctx);
   });
+
+  ctx.restore();
 }
