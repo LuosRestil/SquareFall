@@ -89,6 +89,12 @@ function draw() {
 
   ctx.save();
 
+  let camera = {
+    x: (screenManager.viewWidth - screenManager.refererenceWidth) / 2,
+    y: (screenManager.viewHeight - screenManager.referenceHeight) / 2
+  };
+  ctx.translate(camera.x, camera.y);
+
   ctx.font = "128px sans-serif";
   ctx.fillStyle = "darkgrey";
   ctx.textAlign = "center";
