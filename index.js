@@ -47,6 +47,7 @@ function loop(ms) {
 
   let dt = (ms - lastMs) / 1000;
   dt *= gameSpeed;
+  dt = Math.min(dt, 0.1);
   lastMs = ms;
 
   update(dt);
