@@ -33,7 +33,6 @@ export default class Player {
     this.particles = this.particles.filter((p) => p.active);
     if (!this.particles.length && !this.active) {
       // trigger game over
-      console.log("game over");
     }
   }
 

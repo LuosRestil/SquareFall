@@ -10,13 +10,10 @@ const screenManager = new ScreenManager(
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-canvas.width = screenManager.width * screenManager.dpr;
-canvas.height = screenManager.height * screenManager.dpr;
-ctx.scale(screenManager.dpr, screenManager.dpr);
-screenManager.resize(canvas);
+screenManager.resize(canvas, ctx);
 
 window.addEventListener("resize", () => {
-  screenManager.resize(canvas);
+  screenManager.resize(canvas, ctx);
 });
 
 let lastMs = 0;
@@ -38,6 +35,11 @@ document.addEventListener("keydown", (evt) => {
   player.direction *= -1;
 });
 
+document.addEventListener("mousemove", (evt)=> {
+  globals.mousePos.x = evt.clientX;
+  globals.mousePos.y = evt.clientY;
+});
+
 loop(0);
 
 function loop(ms) {
@@ -45,9 +47,7 @@ function loop(ms) {
 
   let dt = (ms - lastMs) / 1000;
   dt *= gameSpeed;
-
-  dt = Math.min(dt, 1);
-
+  dt = Math.min(dt, 0.1);
   lastMs = ms;
 
   update(dt);
@@ -91,7 +91,17 @@ function update(dt) {
 
 function draw() {
   ctx.fillStyle = "whitesmoke";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, screenManager.viewWidth, screenManager.viewHeight);
+
+  ctx.save();
+
+  let camera = {
+    x: (screenManager.viewWidth - screenManager.referenceWidth) / 2,
+    y: (screenManager.viewHeight - screenManager.referenceHeight) / 2
+  };
+  ctx.translate(camera.x, camera.y);
+
+
 
   ctx.font = "128px sans-serif";
   ctx.fillStyle = "darkgrey";
@@ -102,4 +112,12 @@ function draw() {
   squares.forEach((square) => {
     square.draw(ctx);
   });
+
+  // let mp = screenManager.screenToWorld(globals.mousePos, camera);
+  // ctx.fillStyle = "blue";
+  // ctx.beginPath();
+  // ctx.arc(mp.x, mp.y, 30, 0, Math.PI * 2);
+  // ctx.fill();
+
+  ctx.restore();
 }
